@@ -1,6 +1,6 @@
-![핑크로고](https://github.com/user-attachments/assets/3b4a535e-e1fc-48dd-a89e-33ddfdf708d2)
+![핑크로고](https://github.com/user-attachments/assets/fbcc2c9f-d1de-41fe-b11e-79cfc8d50c76)
 
-### 🏖나랑 여행갈래?  
+# 🏖나랑 여행갈래?  
 게스트 하우스에서 시작하는 새로운 동행 👨‍👦‍👦  
 
 <br/>
