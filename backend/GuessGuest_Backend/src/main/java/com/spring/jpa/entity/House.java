@@ -50,6 +50,42 @@ public class House {
 	
 	private String description;
 	
+	public void calculateStat(List<User> userList) {
+		this.totalUser = userList.size();
+		this.age20 = 0;
+		this.age30 = 0;
+		this.age40 = 0;
+		this.chinese = 0;
+		this.female = 0;
+		this.japanese = 0;
+		this.korean = 0;
+		this.male = 0;
+		this.mbtiE = 0;
+		this.mbtiI = 0;
+		this.notSolo = 0;
+		this.solo = 0;
+		
+		for(User user : userList) {
+			
+			if(user.getGender()) this.male++;
+			else this.female++;
+			
+			if(user.getFood().equals(Food.Korean)) this.korean++;
+			else if(user.getFood().equals(Food.Chinese)) this.chinese++;
+			else this.japanese++;
+			
+			if(user.getMbti().equals(Mbti.E)) this.mbtiE++;
+			else this.mbtiI++;
+			
+			if(user.getAge() >= 20 && user.getAge() < 30) this.age20++;
+			else if(user.getAge() < 40) this.age30++;
+			else if(user.getAge() < 50) this.age40++;
+			
+			if(user.getIsSolo()) this.solo++;
+			else this.notSolo++;
+		}
+	}
+	
 //	@OneToMany(mappedBy = "House")
 //	private List<Reservation> reservations = new ArrayList<>();
 }

@@ -1,8 +1,10 @@
 package com.spring.jpa.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +44,8 @@ public class HouseController {
 			@ApiResponse(responseCode = "200", description = "Success",
 					content = {@Content(schema = @Schema(implementation = HouseStat.class))})
 	})
-	public ResponseEntity<?> getHouseStat(@RequestParam Long houseId, @RequestParam LocalDateTime date) {
-		return ResponseEntity.status(200).body(houseService.getHouseStat(houseId, date));
+	public ResponseEntity<?> getHouseStat(@RequestParam Long houseId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		return ResponseEntity.status(200).body(houseService.getHouseStat(houseId, date.atStartOfDay()));
 	}
 	
 	@GetMapping("houses/user")
@@ -52,8 +54,8 @@ public class HouseController {
 			@ApiResponse(responseCode = "200", description = "Success",
 					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = User.class)))})
 	})
-	public ResponseEntity<?> getStayingUser(@RequestParam Long houseId, @RequestParam LocalDateTime date) {
-		return ResponseEntity.status(200).body(houseService.getStayingUser(houseId, date));
+	public ResponseEntity<?> getStayingUser(@RequestParam Long houseId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		return ResponseEntity.status(200).body(houseService.getStayingUser(houseId, date.atStartOfDay()));
 	}
 	
 	@GetMapping("/houses")
