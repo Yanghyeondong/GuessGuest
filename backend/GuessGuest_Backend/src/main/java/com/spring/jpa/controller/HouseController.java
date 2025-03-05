@@ -14,6 +14,7 @@ import com.spring.jpa.entity.User;
 import com.spring.jpa.service.HouseService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -48,7 +49,7 @@ public class HouseController {
 	@Operation(summary = "게하 유저 리스트", description = "특정 날짜에 머무는 사용자들의 리스트를 반환")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
-					content = {@Content(schema = @Schema(implementation = User.class))})
+					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = User.class)))})
 	})
 	public ResponseEntity<?> getStayingUser(@RequestParam Long houseId, @RequestParam LocalDateTime date) {
 		return ResponseEntity.status(200).body(houseService.getStayingUser(houseId, date));
@@ -58,7 +59,7 @@ public class HouseController {
 	@Operation(summary = "게하 리스트", description = "필터로 정렬된 게하 리스트를 반환")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
-					content = {@Content(schema = @Schema(implementation = House.class))})
+					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = House.class)))})
 	})
 	public ResponseEntity<?> getHouseList(@RequestParam String filter) {
 		return ResponseEntity.status(200).body(houseService.getHouseByFiltering(filter));
@@ -68,7 +69,7 @@ public class HouseController {
 	@Operation(summary = "AI 기반 게하 리스트", description = "AI로 추천된 게하 리스트를 반환")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
-					content = {@Content(schema = @Schema(implementation = House.class))})
+					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = House.class)))})
 	})
 	public ResponseEntity<?> getHouseListByAI(@RequestBody UserReq userReq) {
 		return ResponseEntity.status(200).body(null);
