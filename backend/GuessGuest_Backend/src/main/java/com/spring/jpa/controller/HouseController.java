@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -67,13 +68,13 @@ public class HouseController {
 		return ResponseEntity.status(200).body(houseService.getHouseByFiltering(filter));
 	}
 	
-	@GetMapping("/houses/ai")
+	@PostMapping("/houses/ai")
 	@Operation(summary = "AI 기반 게하 리스트", description = "AI로 추천된 게하 리스트를 반환")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
 					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = House.class)))})
 	})
 	public ResponseEntity<?> getHouseListByAI(@RequestBody UserReq userReq) {
-		return ResponseEntity.status(200).body(null);
+		return ResponseEntity.status(200).body(houseService.getHouseByAi(userReq));
 	}
 }
