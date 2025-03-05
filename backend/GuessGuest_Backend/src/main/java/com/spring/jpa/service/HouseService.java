@@ -1,8 +1,11 @@
 package com.spring.jpa.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.spring.jpa.dto.HouseStat;
@@ -11,16 +14,41 @@ import com.spring.jpa.entity.Food;
 import com.spring.jpa.entity.House;
 import com.spring.jpa.entity.Mbti;
 import com.spring.jpa.entity.Place;
+import com.spring.jpa.entity.Reservation;
 import com.spring.jpa.entity.User;
 import com.spring.jpa.repository.HouseRepository;
+import com.spring.jpa.repository.ReservationRepository;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class HouseService {
 	
 	private final HouseRepository houseRepository;
+	private final ReservationRepository reservationRepository;
+	
+	@PostConstruct()
+	@Scheduled(cron = "0 0 0 * * ?")
+	public void updateTotalData() {
+		List<House> houseList = houseRepository.findAll();
+		
+		for(House house : houseList) {
+			
+			List<User> userList = new ArrayList<>();
+					
+			reservationRepository.findByHouse(house.getHouseId())
+				.forEach(r -> {
+					userList.add(r.getUser());
+				});
+			
+			house.calculateStat(userList);
+			houseRepository.save(house);
+		}
+	}
+	
 	
 	// 모든 게스트하우스 조회 (사용 안함)
 	public List<House> getHouses() {
@@ -31,7 +59,7 @@ public class HouseService {
 	public HouseStat getHouseStat(Long houseId, LocalDateTime date) {
 		
 		List<User> userList = houseRepository.getUserByhouseIdAndDate(houseId, date);
-		
+
 		HouseStat houseStat = new HouseStat();
 		houseStat.calculateStat(userList);
 		
