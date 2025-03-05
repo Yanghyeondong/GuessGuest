@@ -123,10 +123,9 @@ public class HouseService {
 	
 	//AI 추천 게스트 하우스 리스트
 	public List<House> getHouseByAi(UserReq userReq) {
-		
-		User targetUser = userRepository.findById(userReq.getUserId()).get();
+
 		List<House> houses = houseRepository.findAll();
-		
+		List<Long> houseIds = new ArrayList<>();
 		List<List<Integer>> houseData = new ArrayList<>();
 
 	    for (House house : houses) {
@@ -139,49 +138,50 @@ public class HouseService {
 	        
 	        int max = Math.max(house.getChinese(),  Math.max(house.getJapanese(), house.getKorean()));
 	        houseValues.addAll(Arrays.asList(
+	        	house.getKorean() == max ? 1 : 0,
         	    house.getChinese() == max ? 1 : 0,
-        	    house.getJapanese() == max ? 1 : 0,
-        	    house.getKorean() == max ? 1 : 0
+        	    house.getJapanese() == max ? 1 : 0
         	));
 	        
-	        houseValues.add(house.getMbtiE() > house.getMbtiI() ? 1 : -1);
-	        houseValues.add(house.getSolo() > house.getNotSolo() ? 1 : -1);
-
+	        houseValues.add(house.getMbtiE() > house.getMbtiI() ? 1 : 0);
+	        houseValues.add(house.getSolo() >= house.getNotSolo() ? 1 : 0);
+	        
+	        houseIds.add(house.getHouseId());
 	        houseData.add(houseValues);
 	    }
 	    
+//	    System.out.println("HouseId: " + houseIds);
+//	    System.out.println("houseData: " + houseData);
 	    
-		
-//        List<Long> houseIds = new ArrayList<>();
-//        houseIds.add(1L);
-//        houseIds.add(2L);
-//        houseIds.add(3L);
-//        houseIds.add(4L);
-//        houseIds.add(5L);
-//        List<List<Integer>> houseData = new ArrayList<>();
-//        houseData.add(List.of(15, 1, 1, 1, 1, 1));
-//        houseData.add(List.of(40, 0, 1, 0, 1, 0));
-//        houseData.add(List.of(13, 1, 1, 1, 1, 1));
-//        houseData.add(List.of(22, 1, 0, 1, 0, 1));
-//        houseData.add(List.of(25, 1, 0, 1, 0, 1));
+        List<List<Double>> normalizedHouseData = houseData.stream()
+        	    .map(i -> dataNormalization.logTransform(i))
+        	 .collect(Collectors.toList());
         
+//        System.out.println("normalizedHouseData: " + normalizedHouseData);
+
+        User user = userRepository.findById(userReq.getUserId()).get();
+        List<Integer> userData = new ArrayList<>();
         
-//        List<List<Double>> normalizedHouseData = houseData.stream()
-//        	    .map(i -> dataNormalization.logTransform(i))
-//        	 .collect(Collectors.toList());
-//        
-//        List<Integer> userData = List.of(21, 1, 0, 1, 0, 1);
-//        List<Double> normalizedUserData = dataNormalization.logTransform(userData);
-//        
-//        cosineSimilarity.train(houseIds, normalizedHouseData);
-//
-//        List<Long> recommendedHouseIds = cosineSimilarity.classify(normalizedUserData);
-//        
+        userData.add(user.getAge());
+        userData.add(user.getFood() == Food.Korean ? 1 : 0);
+        userData.add(user.getFood() == Food.Chinese ? 1 : 0);
+        userData.add(user.getFood() == Food.Japanese ? 1 : 0);
+        userData.add(user.getMbti() == Mbti.E ? 1 : 0);
+        userData.add(user.getIsSolo() ? 1 : 0);
+        
+//	    System.out.println("userData: " + userData);
+	    
+        List<Double> normalizedUserData = dataNormalization.logTransform(userData);
+//        System.out.println("normalizedUserData: " + normalizedUserData);
+        
+        cosineSimilarity.train(houseIds, normalizedHouseData);
+        List<Long> recommendedHouseIds = cosineSimilarity.classify(normalizedUserData);
 //        System.out.println("추천된 집 ID: " + recommendedHouseIds);
         
+        List<House> recommendedHouses = recommendedHouseIds.stream()
+                .map(houseId -> houses.stream().filter(h -> h.getHouseId().equals(houseId)).findFirst().orElse(null))
+                .collect(Collectors.toList());
         
-        
-        
-        return houseRepository.findByPlaceOrderByTotalUserDesc(Place.해운대);
+        return recommendedHouses;
 	}
 }

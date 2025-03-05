@@ -48,7 +48,7 @@ public class CosineSimilarityService {
             double similarity = dotProduct / (userMagnitude * houseMagnitude);
 
             similarities.add(similarity);
-            System.out.println("similarity: " + similarity);
+//            System.out.println("similarity: " + similarity);
         }
 
         List<Integer> sortedIndices = new ArrayList<>();
