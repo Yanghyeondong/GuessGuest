@@ -15,6 +15,8 @@ public interface HouseRepository extends JpaRepository<House, Long>{
 	@Query("SELECT r.user FROM Reservation r WHERE r.house.houseId = :houseId AND (:date BETWEEN r.startDate AND r.endDate)")
 	public List<User> getUserByhouseIdAndDate(Long houseId, LocalDateTime date);
 	
+	public List<House> OrderByTotalUserDesc();
+	
 	public List<House> findByPlaceOrderByTotalUserDesc(Place place);
 	
 	public List<House> OrderByMbtiEDesc();

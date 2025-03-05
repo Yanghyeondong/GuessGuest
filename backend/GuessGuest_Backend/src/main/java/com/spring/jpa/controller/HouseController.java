@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.jpa.dto.HouseStat;
 import com.spring.jpa.dto.UserReq;
 import com.spring.jpa.entity.House;
+import com.spring.jpa.entity.Place;
 import com.spring.jpa.entity.User;
 import com.spring.jpa.service.HouseService;
 
@@ -64,7 +65,7 @@ public class HouseController {
 			@ApiResponse(responseCode = "200", description = "Success",
 					content = {@Content(array = @ArraySchema(schema = @Schema(implementation = House.class)))})
 	})
-	public ResponseEntity<?> getHouseList(@RequestParam String filter) {
+	public ResponseEntity<?> getHouseList(@RequestParam Place filter) {
 		return ResponseEntity.status(200).body(houseService.getHouseByFiltering(filter));
 	}
 	
