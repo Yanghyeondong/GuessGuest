@@ -39,15 +39,15 @@ const StaticPage = () => {
   });
 
   const handleBackButton = () => {
-    navigate(-1); // 뒤로가기 버튼 클릭 시 이전 페이지로 이동
+    navigate(-1); 
   };
 
   const handleReservation = () => {
-    setModalVisible(true); // 예약하기 클릭 시 모달 띄우기
+    setModalVisible(true); 
   };
 
   const handleCloseModal = () => {
-    setModalVisible(false); // 모달 닫기
+    setModalVisible(false);
   };
 
   return (

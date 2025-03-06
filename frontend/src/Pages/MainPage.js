@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // 🔹 React Router의 네비게이션 훅 가져오기
+import { useNavigate } from "react-router-dom"; 
 
 const MainPage = () => {
-  const navigate = useNavigate(); // 🔹 페이지 이동을 위한 훅 사용
+  const navigate = useNavigate(); 
   // const [guestHouses, setGuestHouses] = useState([]); // 초기값 0개
   const [guestHouses, setGuestHouses] = useState([
     { name: "Seoul Guesthouse", location: "서울", date: "2024-04-01" },
@@ -31,7 +31,6 @@ const MainPage = () => {
           </div>
         )}
 
-        {/* 🔹 여행 찾으러 가기 버튼 클릭 시 StaticPage로 이동 */}
         <button style={styles.findTripButton} onClick={() => navigate("/HouseListPage")}>
           여행 찾으러 가기
         </button>

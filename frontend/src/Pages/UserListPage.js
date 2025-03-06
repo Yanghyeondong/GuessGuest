@@ -1,10 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위한 useNavigate 훅
+import { useNavigate } from 'react-router-dom'; 
 
 const UserListPage = () => {
-  const navigate = useNavigate(); // 페이지 이동 함수
+  const navigate = useNavigate();
 
-  // 뒤로가기 버튼 클릭 시 StaticPage로 이동
+
   const handleBack = () => {
     navigate('/StaticPage');
   };
@@ -100,12 +100,12 @@ const styles = {
     marginBottom: '20px',
     padding: '15px',
     borderRadius: '10px',
-    backgroundColor: '#FFECEC', // 카드 배경색
+    backgroundColor: '#FFECEC', 
   },
   userImage: {
-    width: '80px', // 사진 크기
-    height: '80px', // 사진 크기
-    borderRadius: '50%', // 원형 이미지
+    width: '80px',
+    height: '80px',
+    borderRadius: '50%', 
     backgroundColor:'#CCCCCC' , 
 marginRight:"15PX"
 },
