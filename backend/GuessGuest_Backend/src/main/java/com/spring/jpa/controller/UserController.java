@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class UserController {
 	
 	final UserService userService;
 	
-	@GetMapping("/users")
+	@PostMapping("/users")
 	@Operation(summary = "유저 정보 반환", description = "ID값을 바탕으로 해당 유저의 정보를 반환합니다.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
@@ -40,7 +41,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(userService.getUser(userReq.getUserId()));
 	}
 	
-	@PostMapping("/users")
+	@PutMapping("/users")
 	@Operation(summary = "유저 정보 업데이트", description = "ID값을 바탕으로 해당 유저의 정보를 업데이트합니다.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
