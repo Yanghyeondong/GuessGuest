@@ -6,17 +6,14 @@ import java.util.Date;
 import com.spring.jpa.entity.Food;
 import com.spring.jpa.entity.Mbti;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class UserInfoReq {
-	private Long userId;
+public class UserRegReq {
 	private String nickName;
 	private LocalDate birthDate;
 	private Boolean gender;
 	private Boolean isSolo;
 	private Mbti mbti;
-	private Food food;
+	private Food food; 
 }

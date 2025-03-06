@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.jpa.dto.HateUserReq;
 import com.spring.jpa.dto.UserInfoReq;
+import com.spring.jpa.dto.UserRegReq;
 import com.spring.jpa.dto.UserReq;
 import com.spring.jpa.entity.User;
 import com.spring.jpa.service.HouseService;
@@ -32,13 +33,13 @@ public class UserController {
 	final UserService userService;
 	
 	@PostMapping("/users")
-	@Operation(summary = "유저 정보 반환", description = "ID값을 바탕으로 해당 유저의 정보를 반환합니다.")
+	@Operation(summary = "유저 가입", description = "유저 회원가입을 진행합니다.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Success",
 					content = {@Content(schema = @Schema(implementation = User.class))})
 	})
-	public ResponseEntity<?> getUser(@RequestBody UserReq userReq) {
-		return ResponseEntity.status(200).body(userService.getUser(userReq.getUserId()));
+	public ResponseEntity<?> signUp(@RequestBody UserRegReq userRegReq) {
+		return ResponseEntity.status(200).body(userService.signUp(userRegReq));
 	}
 	
 	@PutMapping("/users")
