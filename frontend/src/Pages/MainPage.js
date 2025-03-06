@@ -15,7 +15,8 @@ const MainPage = () => {
 
   return (
     <div style={styles.mainContainer}>
-      <h2 style={styles.sectionTitle}>Guess Your Trip</h2>
+      <h1 style={styles.pageTitle}>Guess Your Trip</h1>
+      {/* <h2 style={styles.sectionTitle}>Guess Your Trip</h2> */}
       <div style={styles.box}>
         {guestHouses.length === 0 ? (
           <p style={styles.message}>현재 예약 중인 게스트 하우스가 없습니다.</p>
@@ -54,6 +55,12 @@ const styles = {
     fontWeight: "bold",
     fontSize: "24px",
     marginBottom: "20px",
+  },
+  pageTitle: {
+    fontSize: '40px',
+    fontWeight: 'bold',
+    color: '#FFFFFF', 
+    marginBottom: '10px',
   },
   box: {
     background: "#fff",

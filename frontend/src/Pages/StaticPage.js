@@ -39,7 +39,8 @@ const StaticPage = () => {
   });
 
   const handleBackButton = () => {
-    navigate(-1); 
+    // navigate('/HouseListPage'); 
+    navigate(-1);
   };
 
   const handleReservation = () => {
@@ -132,9 +133,9 @@ const StaticPage = () => {
 
             <Pie
               data={getChartData(userStats.foodPreference, [
-                "#99CCFF",
-                "#FF9999",
                 "#FFCC99",
+                "#FF9999",
+                "#99CCFF",
               ])}
               options={{
                 responsive: false,
@@ -150,9 +151,9 @@ const StaticPage = () => {
             <div style={styles.statLabel}>나이대</div>
             <Pie
               data={getChartData(userStats.ageRange, [
-                "#FF9999",
                 "#FFCC99",
-                "#99FF99",
+                "#FF9999",
+                "#99CCFF",
               ])}
               options={{
                 responsive: false,
@@ -205,7 +206,7 @@ const styles = {
     padding: "15px",
     borderRadius: "10px",
     marginTop: "20px",
-    marginLeft: "15=0px",
+    marginLeft: "120px",
     alignSelf: "center",
     background: "#ffecec",
   },
@@ -260,6 +261,7 @@ const styles = {
     marginTop: "20px",
   },
   detailButton: {
+    marginTop: "25px",
     padding: "10px 20px",
     background: "#007bff",
     color: "white",
@@ -268,6 +270,7 @@ const styles = {
     cursor: "pointer",
   },
   reserveButton: {
+    marginTop: "25px",
     padding: "10px 20px",
     background: "#ff5733",
     color: "white",
@@ -279,7 +282,7 @@ const styles = {
     marginBottom: "20px",
   },
   backButton: {
-    padding: "10px",
+    padding: "10px 20px",
     background: "#007bff",
     color: "white",
     border: "none",

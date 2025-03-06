@@ -1,10 +1,22 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  Tooltip,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+
+ChartJS.register(Tooltip, ArcElement, CategoryScale, LinearScale);
 
 const HouseListPage = () => {
+  const navigate = useNavigate();
   const [sortStateMBTI, setSortStateMBTI] = useState("default");
   const [sortStateSolo, setSortStateSolo] = useState("default");
   const [sortStateGender, setSortStateGender] = useState("default");
-  const [sortStateAge, setSortStateAge] = useState("default"); 
+  const [sortStateAge, setSortStateAge] = useState("default");
 
   const [guestHouses, setGuestHouses] = useState([
     {
@@ -158,6 +170,16 @@ const HouseListPage = () => {
     setGuestHouses(sortedList);
   };
 
+  // 숙소보기 버튼 클릭 시 StaticPage로 이동
+  const handleViewHouse = (id) => {
+    navigate("/StaticPage", { state: { houseId: id } });
+  };
+
+  // 게스트보기 버튼 클릭 시 UserListPage로 이동
+  const handleViewGuests = (id) => {
+    navigate("/UserListPage", { state: { houseId: id } });
+  };
+
   return (
     <div style={styles.mainContainer}>
       <h2 style={styles.sectionTitle}>Guess Your Place</h2>
@@ -210,8 +232,18 @@ const HouseListPage = () => {
                 </div>
 
                 <div style={styles.buttonContainer}>
-                  <button style={styles.actionButton}>숙소보기</button>
-                  <button style={styles.actionButton}>게스트보기</button>
+                  <button
+                    style={styles.actionButton}
+                    onClick={() => handleViewHouse(house.id)}
+                  >
+                    숙소보기
+                  </button>
+                  <button
+                    style={styles.actionButton}
+                    onClick={() => handleViewGuests(house.id)}
+                  >
+                    게스트보기
+                  </button>
                 </div>
               </div>
 
@@ -227,12 +259,10 @@ const HouseListPage = () => {
                   대
                 </div>
                 <div>
-                  솔로: {((house.soloYes / house.totalGuests) * 100).toFixed(1)}
-                  %
+                  솔로: {((house.soloYes / house.totalGuests) * 100).toFixed(1)}%
                 </div>
                 <div>
-                  성비: 남 {house.genderRatio.남자} / 여{" "}
-                  {house.genderRatio.여자}
+                  성비: 남 {house.genderRatio.남자} / 여 {house.genderRatio.여자}
                 </div>
               </div>
             </div>
@@ -248,7 +278,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#ff9999",
+    backgroundColor: "#FF9999",
     minHeight: "100vh",
     padding: "40px",
   },
@@ -308,12 +338,21 @@ const styles = {
     backgroundColor: "#ccc",
   },
   textInfo: { textAlign: "center", flex: 1 },
-  buttonContainer: { display: "flex", flexDirection: "column", gap: "5px" },
+  buttonContainer: { 
+    display: "flex", 
+    flexDirection: "column", 
+    gap: "5px",
+    marginTop:"40px",
+    marginLeft:"-30px",
+  },
   actionButton: {
-    padding: "8px 16px",
+    padding: "8px 36px",
     border: "1px solid #ccc",
+    backgroundColor: "#fff",
     borderRadius: "5px",
     cursor: "pointer",
+    marginTop:"20px",
+    // marginBottom:"50px",
   },
   statsGrid: {
     display: "grid",

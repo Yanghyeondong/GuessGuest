@@ -61,6 +61,7 @@ const styles = {
     backgroundColor: '#FF9999', 
   },
   leftContainer: {
+    marginLeft:"100px",
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
@@ -68,19 +69,21 @@ const styles = {
     alignItems: 'center', 
   },
   slogan: {
-    fontSize: '20px', 
+    fontSize: '32px', 
     fontWeight: 'bold', 
     color: '#FFFFFF', 
-    marginBottom: '20px', 
+    marginBottom: '-100px', 
+    marginTop:"50px",
   },
   leftImage: {
-    width: '400px', 
-    height: '400px', 
+    width: '500px', 
+    height: '500px', 
     backgroundSize: 'contain', 
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
   },
   rightContainer: {
+    marginRight: "100px",
     flex: 1,
     display: 'flex',
     justifyContent: 'center', 
@@ -102,6 +105,12 @@ const styles = {
     fontSize: '24px',
     color: '#FF9999',
     marginBottom: '20px',
+  },
+  pageTitle: {
+    fontSize: '40px',
+    fontWeight: 'bold',
+    color: '#FFFFFF', 
+    marginBottom: '10px',
   },
   form: {
     width: '100%',

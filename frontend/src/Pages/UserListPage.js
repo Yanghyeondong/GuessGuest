@@ -6,7 +6,8 @@ const UserListPage = () => {
 
 
   const handleBack = () => {
-    navigate('/StaticPage');
+    // navigate('/StaticPage');
+    navigate(-1);
   };
 
   return (
@@ -15,7 +16,7 @@ const UserListPage = () => {
 
       <div style={styles.mainBox}>
         <button onClick={handleBack} style={styles.backButton}>
-          뒤로가기
+        ◁ 뒤로가기
         </button>
 
         <button style={styles.reserveButton}>예약하기</button>
@@ -68,10 +69,10 @@ const styles = {
   },
   backButton: {
     position: 'absolute',
-    top: '10px',
-    left: '10px',
-    padding: '8px',
-    backgroundColor: '#FF6666', 
+    top: '20px',
+    left: '25px',
+    padding: "10px 20px",
+    backgroundColor: '#007BFF', 
     color: '#FFFFFF',
     borderRadius: '5px',
     border: 'none',
@@ -79,10 +80,12 @@ const styles = {
   },
   reserveButton: {
     position: 'absolute',
-    top: '10px',
-    right: '10px',
-    padding: '8px',
-    backgroundColor: '#007BFF', 
+    top: '20px',
+    right: '35px',
+    padding: "10px 20px",
+    // marginRight: "20px",
+    // marginTop: "20px",
+    backgroundColor: '#FF6666', 
     color: '#FFFFFF', 
     borderRadius: '5px',
     border: 'none',
