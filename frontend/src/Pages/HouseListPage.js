@@ -1,15 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  Tooltip,
-  ArcElement,
-  CategoryScale,
-  LinearScale,
-} from "chart.js";
-
-ChartJS.register(Tooltip, ArcElement, CategoryScale, LinearScale);
 
 const HouseListPage = () => {
   const navigate = useNavigate();
@@ -18,35 +8,11 @@ const HouseListPage = () => {
   const [sortStateGender, setSortStateGender] = useState("default");
   const [sortStateAge, setSortStateAge] = useState("default");
 
-  const [guestHouses, setGuestHouses] = useState([
-    {
-      id: 1,
-      name: "SDS 게스트 하우스",
-      location: "경기도 양평군",
-      description: "게스트들과 즐기는 불멍🔥",
-      totalGuests: 10,
-      mbtiE: 6,
-      mbtiI: 4,
-      ageGroups: { 20: 4, 30: 5, 40: 1 },
-      soloYes: 7,
-      soloNo: 3,
-      genderRatio: { 남자: 6, 여자: 4 },
-    },
-    {
-      id: 2,
-      name: "힐링 게스트하우스",
-      location: "강원도 강릉시",
-      description: "바다가 보이는 힐링 숙소 🌊",
-      totalGuests: 8,
-      mbtiE: 2,
-      mbtiI: 6,
-      ageGroups: { 20: 2, 30: 3, 40: 3 },
-      soloYes: 5,
-      soloNo: 3,
-      genderRatio: { 남자: 3, 여자: 5 },
-    },
-  ]);
+  // ✅ 더미데이터 제거하고 초기값을 빈 배열로 설정
+  const [guestHouses, setGuestHouses] = useState([]);
 
+  //정렬
+  
   const sortByMBTI = () => {
     let sortedList;
     setSortStateMBTI(
@@ -170,22 +136,56 @@ const HouseListPage = () => {
     setGuestHouses(sortedList);
   };
 
-  // 숙소보기 버튼 클릭 시 StaticPage로 이동
+
+
+
+
+
+  // ✅ API에서 게스트 하우스 데이터를 가져오는 함수
+  useEffect(() => {
+    const fetchGuestHouses = async () => {
+      try {
+        console.log("🔄 숙소 정보 불러오는 중..."); // 요청 시작 로그
+  
+        const response = await fetch("http://localhost:9000/houses?filter=전체"); // API 요청
+        console.log("🟢 응답 상태:", response.status); // 응답 상태 확인
+  
+        if (!response.ok) throw new Error("데이터를 불러오는데 실패했습니다.");
+  
+        const data = await response.json(); // JSON 변환
+        console.log("✅ 불러온 데이터:", data); // 응답 데이터 출력
+  
+        setGuestHouses(data); // 상태 업데이트
+      } catch (error) {
+        console.error("❌ API 요청 오류:", error);
+      }
+    };
+  
+    fetchGuestHouses();
+  }, []);
+  // ✅ 숙소 상세 보기 페이지 이동
   const handleViewHouse = (id) => {
     navigate("/StaticPage", { state: { houseId: id } });
   };
 
-  // 게스트보기 버튼 클릭 시 UserListPage로 이동
+  // ✅ 게스트 보기 페이지 이동
   const handleViewGuests = (id) => {
     navigate("/UserListPage", { state: { houseId: id } });
   };
 
   return (
     <div style={styles.mainContainer}>
-      <h2 style={styles.sectionTitle}>Guess Your Place</h2>
+      <h1 style={styles.pageTitle}>Guess Your Place</h1>
 
-      <div style={styles.wrapperBox}>
+      {/* <div style={styles.wrapperBox}>
+        <div style={styles.listContainer}> */}
+
+
+
+        <div style={styles.wrapperBox}>
         <div style={styles.filterContainer}>
+        {/* <div style={styles.listContainer}>  */}
+
           <button style={styles.filterButton}>관광명소</button>
           <button style={styles.filterButton} onClick={sortByMBTI}>
             {sortStateMBTI === "asc"
@@ -219,55 +219,60 @@ const HouseListPage = () => {
           </button>
         </div>
 
-        <div style={styles.listContainer}>
-          {guestHouses.map((house) => (
-            <div key={house.id} style={styles.guestHouseBox}>
-              <div style={styles.infoContainer}>
-                <div style={styles.imagePlaceholder}></div>
+          
+          {guestHouses.length > 0 ? (
+            guestHouses.map((house) => (
+              <div key={house.houseId} style={styles.guestHouseBox}>
+                <div style={styles.infoContainer}>
+                  <div style={styles.imagePlaceholder}></div>
 
-                <div style={styles.textInfo}>
-                  <h3>{house.name}</h3>
-                  <p>{house.location}</p>
-                  <p>"{house.description}"</p>
+                  <div style={styles.textInfo}>
+                    <h3>{house.name}</h3>
+                    <p>{house.place}</p>
+                    <p>"{house.description}"</p>
+                  </div>
+
+                  <div style={styles.buttonContainer}>
+                    <button
+                      style={styles.actionButton}
+                      onClick={() => handleViewHouse(house.houseId)}
+                    >
+                      숙소보기
+                    </button>
+                    <button
+                      style={styles.actionButton}
+                      onClick={() => handleViewGuests(house.houseId)}
+                    >
+                      게스트보기
+                    </button>
+                  </div>
                 </div>
 
-                <div style={styles.buttonContainer}>
-                  <button
-                    style={styles.actionButton}
-                    onClick={() => handleViewHouse(house.id)}
-                  >
-                    숙소보기
-                  </button>
-                  <button
-                    style={styles.actionButton}
-                    onClick={() => handleViewGuests(house.id)}
-                  >
-                    게스트보기
-                  </button>
+                <div style={styles.statsGrid}>
+                  <div>
+                    MBTI: {((house.mbtiE / house.totalUser) * 100).toFixed(1)}%
+                  </div>
+                  <div>
+                    주 연령대:{" "}
+                    {house.age20 > house.age30 && house.age20 > house.age40
+                      ? "20대"
+                      : house.age30 > house.age40
+                      ? "30대"
+                      : "40대"}
+                  </div>
+                  <div>
+                    솔로: {((house.solo / house.totalUser) * 100).toFixed(1)}%
+                  </div>
+                  <div>
+                    성비: 남 {house.male} / 여 {house.female}
+                  </div>
                 </div>
               </div>
-
-              <div style={styles.statsGrid}>
-                <div>
-                  MBTI: {((house.mbtiE / house.totalGuests) * 100).toFixed(1)}%
-                </div>
-                <div>
-                  연령대:{" "}
-                  {Object.keys(house.ageGroups).reduce((a, b) =>
-                    house.ageGroups[a] > house.ageGroups[b] ? a : b
-                  )}
-                  대
-                </div>
-                <div>
-                  솔로: {((house.soloYes / house.totalGuests) * 100).toFixed(1)}%
-                </div>
-                <div>
-                  성비: 남 {house.genderRatio.남자} / 여 {house.genderRatio.여자}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))
+          ) : (
+            <p style={styles.loadingText}>숙소 정보를 불러오는 중...</p>
+          )}
+        {/*</div>{/*이거*/}
       </div>
     </div>
   );
@@ -280,20 +285,6 @@ const styles = {
     alignItems: "center",
     backgroundColor: "#FF9999",
     minHeight: "100vh",
-    padding: "40px",
-  },
-  sectionTitle: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    fontSize: "24px",
-    marginBottom: "20px",
-  },
-  wrapperBox: {
-    background: "#fff",
-    width: "80%",
-    padding: "20px",
-    borderRadius: "15px",
-    boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
   },
   filterContainer: {
     display: "flex",
@@ -301,14 +292,19 @@ const styles = {
     gap: "10px",
     marginBottom: "20px",
   },
-  filterButton: {
-    padding: "8px 16px",
-    border: "none",
-    borderRadius: "5px",
-    background: "#fff",
-    cursor: "pointer",
+  pageTitle: {
+    fontSize: "40px",
     fontWeight: "bold",
-    boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+    color: "#FFFFFF",
+    marginBottom: "10px",
+  },
+  wrapperBox: {
+    background: "#fff",
+    width: "80%",
+    padding: "20px",
+    borderRadius: "15px",
+    minHeight: "500px",
+    boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
   },
   listContainer: {
     maxHeight: "400px",
@@ -319,11 +315,13 @@ const styles = {
   },
   guestHouseBox: {
     background: "#FFECEC",
+    marginBottom:"10px",
     padding: "15px",
     borderRadius: "10px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    
   },
   infoContainer: {
     display: "flex",
@@ -338,12 +336,12 @@ const styles = {
     backgroundColor: "#ccc",
   },
   textInfo: { textAlign: "center", flex: 1 },
-  buttonContainer: { 
-    display: "flex", 
-    flexDirection: "column", 
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "column",
     gap: "5px",
-    marginTop:"40px",
-    marginLeft:"-30px",
+    marginTop: "40px",
+    marginLeft: "-30px",
   },
   actionButton: {
     padding: "8px 36px",
@@ -351,8 +349,16 @@ const styles = {
     backgroundColor: "#fff",
     borderRadius: "5px",
     cursor: "pointer",
-    marginTop:"20px",
-    // marginBottom:"50px",
+    marginTop: "20px",
+  },
+  filterButton: {
+    padding: "8px 16px",
+    border: "none",
+    borderRadius: "5px",
+    background: "#fff",
+    cursor: "pointer",
+    fontWeight: "bold",
+    boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
   },
   statsGrid: {
     display: "grid",
@@ -361,6 +367,11 @@ const styles = {
     width: "60%",
     textAlign: "center",
     marginTop: "10px",
+  },
+  loadingText: {
+    textAlign: "center",
+    fontSize: "18px",
+    color: "#555",
   },
 };
 

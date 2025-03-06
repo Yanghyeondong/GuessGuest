@@ -41,14 +41,22 @@ const MainPage = () => {
 };
 
 const styles = {
+  // mainContainer: {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   backgroundColor: "#ff9999",
+  //   minHeight: "100vh",
+  //   // padding: "40px",
+  // },
   mainContainer: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#ff9999",
+    backgroundColor: "#FF9999",
     minHeight: "100vh",
-    padding: "40px",
+    // padding: "40px",
   },
   sectionTitle: {
     color: "#FFFFFF",
@@ -67,6 +75,7 @@ const styles = {
     padding: "30px",
     borderRadius: "15px",
     width: "70%",
+    // height:"80%",
     minHeight: "500px",
     display: "flex",
     flexDirection: "column",
@@ -75,6 +84,16 @@ const styles = {
     textAlign: "center",
     boxShadow: "0px 6px 12px rgba(0, 0, 0, 0.1)",
   },
+
+  wrapperBox: {
+    background: "#fff",
+    width: "80%",
+    // height:"80%",
+    padding: "20px",
+    borderRadius: "15px",
+    boxShadow: "0px 4px 8px rgba(0,0,0,0.1)",
+  },
+
   message: {
     fontSize: "18px",
     color: "#333",
