@@ -4,7 +4,7 @@ const HouseListPage = () => {
   const [sortStateMBTI, setSortStateMBTI] = useState("default");
   const [sortStateSolo, setSortStateSolo] = useState("default");
   const [sortStateGender, setSortStateGender] = useState("default");
-  const [sortStateAge, setSortStateAge] = useState("default"); // 연령대 추가 상태
+  const [sortStateAge, setSortStateAge] = useState("default"); 
 
   const [guestHouses, setGuestHouses] = useState([
     {
