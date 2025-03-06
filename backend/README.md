@@ -70,6 +70,7 @@
 <br>
 
 ## Get ("/houses/stat?houseId={int}&date={date}") - 날짜별 게하 통계
+### Response Body
 ```json
 {
   "totalUser": 0,
@@ -92,7 +93,7 @@
 
 ## Get ("/houses/user?houseId={int}&date={date}") - 날짜별 게하 유저리스트
 
-## Response Body
+### Response Body
 ```json
 [
   {
