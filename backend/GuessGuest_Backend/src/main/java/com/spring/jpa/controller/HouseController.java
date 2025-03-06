@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "게스트 하우스", description = "게스트하우스 관련 API")

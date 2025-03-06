@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin(origins = {"*"}, maxAge = 6000)
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "유저", description = "유저 관련 API")
