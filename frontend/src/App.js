@@ -10,7 +10,7 @@ import UserListPage from './Pages/UserListPage';
 const App = () => {
   return (
     <Router>
-      <nav>
+      {/* <nav>
         <ul>
           <li><Link to="/">LoginPage</Link></li>
           <li><Link to="/MainPage">MainPage</Link></li>
@@ -18,7 +18,7 @@ const App = () => {
           <li><Link to="/StaticPage">StaticPage</Link></li>
           <li><Link to="/UserListPage"> UserListPage</Link></li>
         </ul>
-      </nav>
+      </nav> */}
 
       <Routes>
         <Route path="/" element={<LoginPage />} />

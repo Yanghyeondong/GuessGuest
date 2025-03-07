@@ -7,8 +7,21 @@ const HouseListPage = () => {
   const [sortStateSolo, setSortStateSolo] = useState("default");
   const [sortStateGender, setSortStateGender] = useState("default");
   const [sortStateAge, setSortStateAge] = useState("default");
+  const [aiRecommendation, setAiRecommendation] = useState(false); // AI 추천 상태 추가
 
   const [guestHouses, setGuestHouses] = useState([]);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      console.warn("⚠ HouseListPage: userId가 저장되지 않음!");
+    }
+  }, []);
+
+
 
   // ✅ API에서 게스트 하우스 데이터를 가져오는 함수
   useEffect(() => {
@@ -38,7 +51,72 @@ const HouseListPage = () => {
     setSortStateSolo("default");
     setSortStateGender("default");
     setSortStateAge("default");
+    setAiRecommendation(false); // AI 추천 비활성화
+
   };
+
+  // ✅ AI 추천 기능
+  // const handleAiRecommendation = async () => {
+  //   resetSortStates();
+  //   try {
+  //     console.log("🤖 AI 추천 숙소 불러오는 중...");
+  //     const response = await fetch("http://localhost:9000/houses/ai");
+  //     console.log("🟢 AI 추천 응답 상태:", response.status);
+
+  //     if (!response.ok) throw new Error("AI 추천 데이터를 불러오는데 실패했습니다.");
+
+  //     const data = await response.json();
+  //     console.log("✅ AI 추천 데이터:", data);
+
+  //     setGuestHouses(data);
+  //     setAiRecommendation(true);
+  //   } catch (error) {
+  //     console.error("❌ AI 추천 오류:", error);
+  //   }
+  // };
+  const handleAiRecommendation = async () => {
+    resetSortStates();
+    
+    // ✅ localStorage에서 유저 데이터 가져오기
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    
+    if (!userData) {
+      alert("로그인 정보가 없습니다. 다시 로그인 해주세요.");
+      return;
+    }
+  
+    try {
+      console.log("🤖 AI 추천 숙소 불러오는 중...");
+  
+      // ✅ AI 추천 요청에 유저 정보 포함
+      const response = await fetch("http://localhost:9000/houses/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),  // 🔥 유저 데이터를 함께 전송
+      });
+
+
+      console.log("JSON 받아오기");
+      console.log(userData);
+      console.log("JSON 받아오기");
+
+      console.log("🟢 AI 추천 응답 상태:", response.status);
+  
+      if (!response.ok) throw new Error("AI 추천 데이터를 불러오는데 실패했습니다.");
+  
+      const data = await response.json();
+      console.log("✅ AI 추천 데이터:", data);
+  
+      setGuestHouses(data);
+      setAiRecommendation(true);
+    } catch (error) {
+      console.error("❌ AI 추천 오류:", error);
+    }
+  };
+  
+
   // ✅ MBTI (비율 기준 정렬)
   const sortByMBTI = () => {
     resetSortStates();
@@ -179,6 +257,9 @@ const HouseListPage = () => {
               ? "남자 ↑"
               : "성비"}
           </button>
+          <button style={styles.AifilterButton} onClick={handleAiRecommendation}>
+            {aiRecommendation ? "AI 추천 🔄" : "AI 추천 🤖"}
+          </button>
         </div>
 
         {/* ✅ 리스트 영역에 스크롤 적용 */}
@@ -187,8 +268,17 @@ const HouseListPage = () => {
             guestHouses.map((house) => (
               <div key={house.houseId} style={styles.guestHouseBox}>
                 <div style={styles.infoContainer}>
-                  <div style={styles.imagePlaceholder}></div>
-
+                  {/* ✅ houseId를 기반으로 이미지 적용 */}
+                  <img 
+                    src={`/house/house${(house.houseId % 20 + 1).toString().padStart(2, '0')}.jpg`} 
+                    alt="숙소 이미지" 
+                    style={styles.imagePlaceholder} 
+                    onError={(e) => {
+                      // JPG가 없으면 PNG로 변경, 그래도 없으면 기본 이미지
+                      e.target.onerror = null; // 무한 루프 방지
+                      e.target.src = `/house/house${(house.houseId % 20 + 1).toString().padStart(2, '0')}.png`;
+                      // e.target.onerror = (e) => e.target.src = "/house/default.jpg"; 
+                    }}                   />
                   <div style={styles.textInfo}>
                     <h3>{house.name}</h3>
                     <p>{house.place}</p>
@@ -279,6 +369,18 @@ const styles = {
     border: "none",
     borderRadius: "5px",
     background: "#fff",
+    border: "1px",
+
+    cursor: "pointer",
+    fontWeight: "bold",
+    boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+  },
+  AifilterButton: {
+    padding: "8px 16px",
+    border: "none",
+    borderRadius: "5px",
+    background: "#007bff",
+    border: "1px",
     cursor: "pointer",
     fontWeight: "bold",
     boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
@@ -305,11 +407,21 @@ const styles = {
     justifyContent: "space-between",
     width: "90%",
   },
+  // imagePlaceholder: {
+  //   width: "50px",
+  //   height: "50px",
+  //   borderRadius: "50%",
+  //   backgroundColor: "#ccc",
+  // },
   imagePlaceholder: {
-    width: "50px",
-    height: "50px",
+    marginTop:"30px",
+    marginBottom:"-30px",
+    
+    width: "200px",
+    height: "200px",
     borderRadius: "50%",
-    backgroundColor: "#ccc",
+    objectFit: "cover",  // ✅ 이미지가 영역에 맞게 잘리도록 설정
+    overflow: "hidden",  // ✅ 테두리 밖 요소가 보이지 않도록 처리
   },
   textInfo: { textAlign: "center", flex: 1 },
   buttonContainer: {

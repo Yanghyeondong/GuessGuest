@@ -109,7 +109,20 @@ const UserListPage = () => {
           {users.length > 0 ? (
             users.map((user) => (
               <div key={user.userId} style={styles.userCard}>
-                <div style={styles.userImage}></div>
+                {/* <div style={styles.userImage}></div> */}
+                <img 
+                    src={`/user/user${(user.userId % 40%13 + 1).toString().padStart(2, '0')}.jpg`} 
+                    alt="숙소 이미지" 
+                    style={styles.userImage} 
+                    onError={(e) => {
+                      // JPG가 없으면 PNG로 변경, 그래도 없으면 기본 이미지
+                      e.target.onerror = null; // 무한 루프 방지
+                      e.target.src = `/user/user${(user.userId % 40%13 + 1).toString().padStart(2, '0')}.png`;
+                      // e.target.onerror = (e) => e.target.src = "/house/default.jpg"; 
+                    }}                   
+                />
+
+                
                 <div style={styles.userInfo}>
                   <h3>{user.nickName} ({user.age}세)</h3>
                   <p>성별: {user.gender ? "남자" : "여자"}</p>
@@ -272,60 +285,62 @@ const styles = {
       height: '80px',
       borderRadius: '50%', 
       backgroundColor:'#CCCCCC' , 
-  marginRight:"15PX"
-  },
-  userInfo:{
-  flexGrow:"1",
-  },
-  userName:{
-  fontSize:"18PX",
-  fontWeight:"BOLD",
-  },
-  userDetails:{
-  fontSize:"14PX",
-  color:"#555555",
-  marginBottom:"10PX",
-  },
-  buttonContainer:{
-  display:"FLEX",
-  flexDirection:"COLUMN",
-  gap:"10PX"
-  },
-  actionButton:{
-  width:"120PX",
-  padding:"10PX",
-  borderRadius:"8PX",background:"#FFF" , 
-  border:"#DDD solid "
-  },
-  modal: {
-    position: "fixed",
-    top: "0",
-    left: "0",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    background: "white",
-    padding: "30px",
-    borderRadius: "10px",
-    textAlign: "center",
-  },
-  closeButton: {
-    padding: "10px 20px",
-    background: "#ff5733",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-  },
-  
-  textarea: { width: "100%", height: "80px", marginBottom: "10px" },
-  sendButton: { padding: "10px 20px", background: "#007bff", color: "white", border: "1px #fff", borderRadius: "5px", cursor: "pointer" },
-  cancelButton: { padding: "10px 20px", background: "#ff5733", color: "white",  border: "1px #fff",borderRadius: "5px", cursor: "pointer", marginLeft: "10px" }
-};
+      marginRight:"15PX",
+      objectFit: "cover",  // ✅ 이미지가 영역에 맞게 잘리도록 설정
+      overflow: "hidden",  // ✅ 테두리 밖 요소가 보이지 않도록 처리
+    },
+    userInfo:{
+    flexGrow:"1",
+    },
+    userName:{
+    fontSize:"18PX",
+    fontWeight:"BOLD",
+    },
+    userDetails:{
+    fontSize:"14PX",
+    color:"#555555",
+    marginBottom:"10PX",
+    },
+    buttonContainer:{
+    display:"FLEX",
+    flexDirection:"COLUMN",
+    gap:"10PX"
+    },
+    actionButton:{
+    width:"120PX",
+    padding:"10PX",
+    borderRadius:"8PX",background:"#FFF" , 
+    border:"#DDD solid "
+    },
+    modal: {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalContent: {
+      background: "white",
+      padding: "30px",
+      borderRadius: "10px",
+      textAlign: "center",
+    },
+    closeButton: {
+      padding: "10px 20px",
+      background: "#ff5733",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+    },
+    
+    textarea: { width: "100%", height: "80px", marginBottom: "10px" },
+    sendButton: { padding: "10px 20px", background: "#007bff", color: "white", border: "1px #fff", borderRadius: "5px", cursor: "pointer" },
+    cancelButton: { padding: "10px 20px", background: "#ff5733", color: "white",  border: "1px #fff",borderRadius: "5px", cursor: "pointer", marginLeft: "10px" }
+  };
 
 export default UserListPage;

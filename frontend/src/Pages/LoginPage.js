@@ -7,41 +7,42 @@ const LoginPage = () => {
   const [showUserInfoForm, setShowUserInfoForm] = useState(false);
 
 
-  const handleComplete = async () => {
-    try {
-      const response = await fetch("http://localhost:9000/users", {//url 쏠 대 localhost로 쏴야 cors 문제 안생김
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "cors", // CORS 문제 방지
+  // const handleComplete = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:9000/users", {//url 쏠 대 localhost로 쏴야 cors 문제 안생김
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       mode: "cors", // CORS 문제 방지
 
-        body: JSON.stringify({
-          nickName: userData.nickname,
-          birthDate: userData.birthdate,
-          gender: userData.gender === "여자", // API는 Boolean으로 받음 (여자 → true)
-          isSolo: userData.isSolo === "Yes", // Boolean 변환
-          mbti: userData.mbti,
-          food: userData.food,
-        }),
-      });
-      console.log("완료버튼 눌림");
-      if (!response.ok) throw new Error("회원가입 실패");
+  //       body: JSON.stringify({
+  //         nickName: userData.nickname,
+  //         birthDate: userData.birthdate,
+  //         gender: userData.gender === "여자", // API는 Boolean으로 받음 (여자 → true)
+  //         isSolo: userData.isSolo === "Yes", // Boolean 변환
+  //         mbti: userData.mbti,
+  //         food: userData.food,
+  //       }),
+  //     });
+  //     console.log("완료버튼 눌림");
+  //     if (!response.ok) throw new Error("회원가입 실패");
   
-      const data = await response.json();
-      console.log("회원가입 성공:", data);
+  //     const data = await response.json();
+  //     console.log("회원가입 성공:", data);
   
-      localStorage.setItem("userId", data.userId);
+  //     localStorage.setItem("userId", data.userId);
     
   
-      navigate("/MainPage");
-    } catch (error) {
-      console.error("회원가입 중 오류 발생:", error);
-    }
-  };
+  //     navigate("/MainPage");
+  //   } catch (error) {
+  //     console.error("회원가입 중 오류 발생:", error);
+  //   }
+  // };
 
 
   const [userData, setUserData] = useState({
+    userId: "",
     nickname: "",
     birthdate: "",
     gender: "여자",
@@ -49,6 +50,62 @@ const LoginPage = () => {
     mbti: "I",
     food: "중식",
   });
+
+
+  const handleComplete = async () => {
+    try {
+      const response = await fetch("http://localhost:9000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        mode: "cors", // CORS 문제 방지
+        body: JSON.stringify({
+          userId: userData.userId,  // ✅ 여기서 ""일 가능성이 있음
+          nickName: userData.nickname,
+          birthDate: userData.birthdate,
+          gender: userData.gender === "여자",
+          isSolo: userData.isSolo === "Yes",
+          mbti: userData.mbti,
+          food: userData.food,
+        }),
+      });
+  
+      console.log("✅ 완료 버튼 눌림");
+  
+      if (!response.ok) throw new Error("회원가입 실패");
+  
+      const data = await response.json();
+      console.log("✅ 회원가입 성공:", data);
+  
+      // ✅ userId가 빈 값이 아닐 때만 저장
+      if (data.userId) {
+        localStorage.setItem("userId", data.userId);
+      } else {
+        console.warn("⚠ userId가 비어 있음!");
+      }
+  
+      // ✅ AI 추천 기능을 위해 유저 정보를 `localStorage`에 저장
+      const userDataToSave = {
+        userId: data.userId,  // ✅ 여기서도 `data.userId` 사용
+        nickname: userData.nickname,
+        mbti: userData.mbti,
+        birthDate: userData.birthdate,
+        gender: userData.gender,
+        isSolo: userData.isSolo,
+        food: userData.food,
+      };
+  
+      localStorage.setItem("userData", JSON.stringify(userDataToSave));
+      console.log("✅ 로컬 저장 완료:", userDataToSave);
+  
+      // ✅ MainPage로 이동
+      navigate("/MainPage");
+    } catch (error) {
+      console.error("❌ 회원가입 중 오류 발생:", error);
+    }
+  };
+  
+  
+
 
   const handleInputChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -161,7 +218,7 @@ const LoginPage = () => {
                 </div>
               </div>
               <div style={styles.optionGroup}>
-                <label style={styles.label}>선호 음식</label>
+                {/* <label style={styles.label}>선호 음식</label>
                 <div style={styles.toggleGroup}>
                   {['Korean', 'Chinese', 'Japanese'].map((option) => (
                     <button
@@ -172,13 +229,30 @@ const LoginPage = () => {
                       {option}
                     </button>
                   ))}
+                </div> */}
+                  <label style={styles.label}>선호 음식</label>
+                <div style={styles.toggleGroup}>
+                  {[
+                    { label: '한식', value: 'Korean' },
+                    { label: '중식', value: 'Chinese' },
+                    { label: '일식', value: 'Japanese' }
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      style={userData.food === option.value ? styles.selectedButton : styles.button}
+                      onClick={() => handleSelection('food', option.value)}
+                    >
+                      {option.label}  {/* ✅ 버튼에는 '한식', '중식', '일식'이 표시됨 */}
+                    </button>
+                  ))}
                 </div>
+
               </div>
             </div>
             <button onClick={() => {
-  console.log("✅ 완료 버튼 클릭됨");
-  handleComplete();
-}} style={styles.completeButton}>완료</button>
+                console.log("✅ 완료 버튼 클릭됨");
+                handleComplete();
+              }} style={styles.completeButton}>완료</button>
             {/* <button onClick={handleComplete} style={styles.completeButton}>완료완료</button> */}
           </div>
         </div>
