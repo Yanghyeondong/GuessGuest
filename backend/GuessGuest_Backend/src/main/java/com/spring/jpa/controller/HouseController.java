@@ -28,10 +28,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 6000)
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.OPTIONS}, maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "게스트 하우스", description = "게스트하우스 관련 API")

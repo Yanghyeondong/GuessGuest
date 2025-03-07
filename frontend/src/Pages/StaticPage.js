@@ -126,14 +126,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${houseStats.male}%`,
+                width: `${houseStats.male*10}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${houseStats.female}%`,
+                width: `${houseStats.female*10}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
@@ -146,14 +146,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${houseStats.mbtiE}%`,
+                width: `${houseStats.mbtiE*10}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${houseStats.mbtiI}%`,
+                width: `${houseStats.mbtiI*10}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
@@ -166,14 +166,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${houseStats.solo}%`,
+                width: `${houseStats.solo*10}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${houseStats.notSolo}%`,
+                width: `${houseStats.notSolo*10}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
