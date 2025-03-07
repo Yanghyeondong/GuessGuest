@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'; 
 
 const UserListPage = () => {
   const navigate = useNavigate();
 
+  const [modalVisible, setModalVisible] = useState(false); // 예약 완료 모달 상태
 
   const handleBack = () => {
     // navigate('/StaticPage');
     navigate(-1);
   };
+  const handleReservation = () => {
+    setModalVisible(true); 
+  };
 
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
   return (
     <div style={styles.container}>
       <h1 style={styles.pageTitle}>Guess Your Mate</h1>
@@ -19,7 +26,7 @@ const UserListPage = () => {
         ◁ 뒤로가기
         </button>
 
-        <button style={styles.reserveButton}>예약하기</button>
+        <button style={styles.reserveButton} onClick={handleReservation}>예약하기</button>
 
         <div style={styles.userList}>
           {Array.from({ length: 6 }).map((_, index) => (
@@ -37,6 +44,17 @@ const UserListPage = () => {
           ))}
         </div>
       </div>
+
+      {modalVisible && (
+        <div style={styles.modal}>
+          <div style={styles.modalContent}>
+            <h2>예약 완료!</h2>
+            <button style={styles.closeButton} onClick={handleCloseModal}>
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -48,7 +66,7 @@ const styles = {
     alignItems: 'center',
     height: '100vh',
     backgroundColor: '#FF9999', 
-    paddingTop: '20px', 
+    // paddingTop: '20px', 
   },
   pageTitle: {
     fontSize: '40px',
@@ -60,7 +78,7 @@ const styles = {
     position: 'relative',
     width: '80%',
     maxWidth: '800px',
-    height: '85%',
+    height: '70%',
     backgroundColor: '#FFFFFF',
     borderRadius: '10px',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', 
@@ -134,7 +152,32 @@ width:"120PX",
 padding:"10PX",
 borderRadius:"8PX",background:"#FFF" , 
 border:"#DDD solid "
-}
+},
+modal: {
+  position: "fixed",
+  top: "0",
+  left: "0",
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+},
+modalContent: {
+  background: "white",
+  padding: "30px",
+  borderRadius: "10px",
+  textAlign: "center",
+},
+closeButton: {
+  padding: "10px 20px",
+  background: "#ff5733",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+},
 };
 
 export default UserListPage;
