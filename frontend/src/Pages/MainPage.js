@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
   const navigate = useNavigate(); 
-  // const [guestHouses, setGuestHouses] = useState([]); // 초기값 0개
-  const [guestHouses, setGuestHouses] = useState([
-    { name: "Seoul Guesthouse", location: "서울", date: "2024-04-01" },
-    { name: "Jeju Stay", location: "제주도", date: "2024-04-10" },
-    { name: "Busan View", location: "부산", date: "2024-05-05" },
-    { name: "Gangwon Retreat", location: "강원도", date: "2024-06-15" },
-  ]);
+  const [guestHouses, setGuestHouses] = useState([]); // 초기값 0개
+  // const [guestHouses, setGuestHouses] = useState([
+  //   { name: "Seoul Guesthouse", location: "서울", date: "2024-04-01" },
+  //   { name: "Jeju Stay", location: "제주도", date: "2024-04-10" },
+  //   { name: "Busan View", location: "부산", date: "2024-05-05" },
+  //   { name: "Gangwon Retreat", location: "강원도", date: "2024-06-15" },
+  // ]);
   
 
 

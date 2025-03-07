@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Doughnut, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -13,6 +13,9 @@ ChartJS.register(Tooltip, ArcElement, CategoryScale, LinearScale);
 
 const StaticPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { houseId } = location.state || {}; // HouseListPage에서 넘긴 houseId 가져오기
+
   const [modalVisible, setModalVisible] = useState(false); // 예약 완료 모달 상태
 
   const currentDate = new Date().toLocaleDateString();
@@ -21,9 +24,59 @@ const StaticPage = () => {
     gender: { male: 60, female: 40 },
     mbti: { E: 80, I: 20 },
     solo: { yes: 70, no: 30 },
-    foodPreference: { korean: 50, western: 30, chinese: 20 },
+    foodPreference: { korean: 50, japanese: 30, chinese: 20 },
     ageRange: { "20s": 40, "30s": 35, "40s": 25 },
   };
+
+
+  const [houseStats, setHouseStats] = useState({
+    totalUser: 0,
+    male: 0,
+    female: 0,
+    korean: 0,
+    japanese: 0,
+    chinese: 0,
+    mbtiE: 0,
+    mbtiI: 0,
+    age20: 0,
+    age30: 0,
+    age40: 0,
+    solo: 0,
+    notSolo: 0,
+  });
+
+  // ✅ 숙소 통계 API 요청
+
+  useEffect(() => {
+  if (!houseId) return;
+
+  const fetchHouseStats = async () => {
+    try {
+      // ✅ 날짜를 YYYY-MM-DD 형식으로 변환
+      const formattedDate = new Date().toISOString().split("T")[0]; 
+      console.log(`🔄 숙소 통계 조회 중 (houseId: ${houseId}, date: ${formattedDate})`);
+
+      // ✅ URL 인코딩 적용
+      const apiUrl = `http://localhost:9000/houses/stat?houseId=${encodeURIComponent(houseId)}&date=${encodeURIComponent(formattedDate)}`;
+      console.log("📌 API 요청 URL:", apiUrl);
+
+      const response = await fetch(apiUrl);
+      console.log("🟢 응답 상태:", response.status);
+
+      if (!response.ok) throw new Error("숙소 통계를 불러오는데 실패했습니다.");
+
+      const data = await response.json();
+      console.log("✅ 숙소 통계 데이터:", data);
+
+      setHouseStats(data);
+    } catch (error) {
+      console.error("❌ API 요청 오류:", error);
+    }
+  };
+
+  fetchHouseStats();
+}, [houseId]);
+
 
   // 파이차트트
   const getChartData = (data, colors) => ({
@@ -73,14 +126,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${userStats.gender.male}%`,
+                width: `${houseStats.male}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${userStats.gender.female}%`,
+                width: `${houseStats.female}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
@@ -93,14 +146,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${userStats.mbti.E}%`,
+                width: `${houseStats.mbtiE}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${userStats.mbti.I}%`,
+                width: `${houseStats.mbtiI}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
@@ -113,14 +166,14 @@ const StaticPage = () => {
           <div style={styles.statGauge}>
             <div
               style={{
-                width: `${userStats.solo.yes}%`,
+                width: `${houseStats.solo}%`,
                 backgroundColor: "#99CCFF",
                 height: "30px",
               }}
             ></div>
             <div
               style={{
-                width: `${userStats.solo.no}%`,
+                width: `${houseStats.notSolo}%`,
                 backgroundColor: "#FF9999",
                 height: "30px",
               }}
@@ -130,48 +183,35 @@ const StaticPage = () => {
         <div style={styles.chartContainer}>
           <div style={styles.statItem}>
             <div style={styles.statLabel}>선호 음식</div>
-
             <Pie
-              data={getChartData(userStats.foodPreference, [
-                "#FFCC99",
-                "#FF9999",
-                "#99CCFF",
-              ])}
-              options={{
-                responsive: false,
-                maintainAspectRatio: true,
-                cutoutPercentage: 70,
-                width: 10,
-                height: 10,
-              }}
+              data={getChartData(
+                { 한식: houseStats.korean, 중식: houseStats.chinese, 일식: houseStats.japanese },
+                ["#FFCC99", "#FF9999", "#99CCFF"]
+              )}
+              options={{ responsive: false, maintainAspectRatio: true, cutoutPercentage: 70 }}
             />
+
           </div>
 
           <div style={styles.statItem}>
             <div style={styles.statLabel}>나이대</div>
             <Pie
-              data={getChartData(userStats.ageRange, [
-                "#FFCC99",
-                "#FF9999",
-                "#99CCFF",
-              ])}
-              options={{
-                responsive: false,
-                maintainAspectRatio: true,
-                cutoutPercentage: 70,
-                width: 10,
-                height: 10,
-              }}
+              data={getChartData(
+                { "20대": houseStats.age20, "30대": houseStats.age30, "40대": houseStats.age40 },
+                ["#FFCC99", "#FF9999", "#99CCFF"]
+              )}
+              options={{ responsive: false, maintainAspectRatio: true, cutoutPercentage: 70 }}
             />
           </div>
         </div>
         <div style={styles.buttonContainer}>
           <button
             style={styles.detailButton}
-            onClick={() => navigate("/UserListPage")}
+            onClick={() => navigate("/UserListPage", { state: { houseId } })}
           >
             이용자 상세보기
           </button>
+
           <button style={styles.reserveButton} onClick={handleReservation}>
             예약하기
           </button>
